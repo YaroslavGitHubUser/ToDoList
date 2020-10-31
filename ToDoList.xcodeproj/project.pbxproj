@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C4654A6E254CB49600693D10 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4654A6D254CB49600693D10 /* EditViewController.swift */; };
 		C4B1B0702549F34600751C97 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B1B06F2549F34600751C97 /* StorageManager.swift */; };
 		C4C4B8E125459E12007A3DE3 /* NewTaskTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C4B8E025459E12007A3DE3 /* NewTaskTableViewController.swift */; };
 		C4D4E0AB254204D40043BFA8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D4E0AA254204D40043BFA8 /* AppDelegate.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C4654A6D254CB49600693D10 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		C4B1B06F2549F34600751C97 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		C4C4B8E025459E12007A3DE3 /* NewTaskTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTaskTableViewController.swift; sourceTree = "<group>"; };
 		C4D4E0A7254204D40043BFA8 /* ToDoList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoList.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -72,6 +74,7 @@
 				C4D4E0B8254204D60043BFA8 /* Info.plist */,
 				C4B1B06F2549F34600751C97 /* StorageManager.swift */,
 				C4D4E0BE2542053B0043BFA8 /* AllTasksTableViewController.swift */,
+				C4654A6D254CB49600693D10 /* EditViewController.swift */,
 				C4C4B8E025459E12007A3DE3 /* NewTaskTableViewController.swift */,
 				C4D4E0C02542179C0043BFA8 /* TaskTableViewCell.swift */,
 				C4D4E0C22542192B0043BFA8 /* Task.swift */,
@@ -150,6 +153,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C4654A6E254CB49600693D10 /* EditViewController.swift in Sources */,
 				C4C4B8E125459E12007A3DE3 /* NewTaskTableViewController.swift in Sources */,
 				C4D4E0C12542179D0043BFA8 /* TaskTableViewCell.swift in Sources */,
 				C4D4E0AB254204D40043BFA8 /* AppDelegate.swift in Sources */,

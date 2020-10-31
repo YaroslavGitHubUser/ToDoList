@@ -3,9 +3,67 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--EDIT TASK-->
+        <scene sceneID="QNB-NA-BsJ">
+            <objects>
+                <viewController id="TB6-dB-XoP" customClass="EditViewController" customModule="ToDoList" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ry0-YD-JIo">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="0qv-C0-VIz">
+                                <rect key="frame" x="30" y="136" width="354" height="92"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bCa-Jt-XKB">
+                                        <rect key="frame" x="10" y="0.0" width="334" height="36"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dKf-zq-Wwm">
+                                        <rect key="frame" x="160" y="56" width="34" height="36"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <state key="normal" title="Edit"/>
+                                        <connections>
+                                            <segue destination="zLD-MN-ges" kind="unwind" identifier="editSegue" unwindAction="unwindSegueWithSegue:" id="BQw-AX-eUi"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="bCa-Jt-XKB" firstAttribute="leading" secondItem="0qv-C0-VIz" secondAttribute="leading" constant="10" id="AnH-Xc-06E"/>
+                                    <constraint firstAttribute="trailing" secondItem="bCa-Jt-XKB" secondAttribute="trailing" constant="10" id="Oim-bu-3so"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemGray5Color" red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="Cyi-Gi-V63" firstAttribute="trailing" secondItem="0qv-C0-VIz" secondAttribute="trailing" constant="30" id="1EI-t4-PcB"/>
+                            <constraint firstItem="0qv-C0-VIz" firstAttribute="centerX" secondItem="ry0-YD-JIo" secondAttribute="centerX" id="IOq-LP-9Tk"/>
+                            <constraint firstItem="0qv-C0-VIz" firstAttribute="leading" secondItem="Cyi-Gi-V63" secondAttribute="leading" constant="30" id="XMX-1T-zLh"/>
+                            <constraint firstItem="0qv-C0-VIz" firstAttribute="top" secondItem="Cyi-Gi-V63" secondAttribute="top" constant="80" id="t8C-2b-ATq"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Cyi-Gi-V63"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="EDIT TASK" id="TmJ-cj-0Ee">
+                        <barButtonItem key="leftBarButtonItem" title="Cancell" id="suS-N1-9H3">
+                            <color key="tintColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <connections>
+                                <segue destination="zLD-MN-ges" kind="unwind" unwindAction="unwindSegueWithSegue:" id="Hj8-02-l3i"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="editTextField" destination="bCa-Jt-XKB" id="2mO-so-hcK"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GSG-PE-rEH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="zLD-MN-ges" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="2997.1014492753625" y="-524.33035714285711"/>
+        </scene>
         <!--All Tasks-->
         <scene sceneID="Wgc-um-AC8">
             <objects>
@@ -53,6 +111,7 @@
                                 <connections>
                                     <outlet property="emojiLabel" destination="dJk-iA-URc" id="aMO-Rs-tID"/>
                                     <outlet property="taskLabel" destination="6fX-Nj-FbU" id="dN9-0s-wct"/>
+                                    <segue destination="Azs-l5-7Vx" kind="presentation" identifier="editCellView" id="myV-q6-ZaY"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -77,23 +136,22 @@
         <scene sceneID="nMG-9L-HPQ">
             <objects>
                 <tableViewController id="g4A-Bg-S4Y" customClass="NewTaskTableViewController" customModule="ToDoList" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="XRT-2m-DcY">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="XRT-2m-DcY">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
                             <tableViewSection headerTitle="YOUR NEW TASK🔥" id="yoP-MU-bvk">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="44" id="jR9-dl-j4b" userLabel="NewTaskCell">
-                                        <rect key="frame" x="0.0" y="55.5" width="414" height="44"/>
+                                        <rect key="frame" x="20" y="55.5" width="374" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="jR9-dl-j4b" id="QVa-w6-zeq">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="374" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rkj-a0-alr">
-                                                    <rect key="frame" x="15" y="5" width="384" height="34"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <rect key="frame" x="15" y="5" width="344" height="34"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
                                                         <action selector="newTaskEntered:" destination="g4A-Bg-S4Y" eventType="editingChanged" id="uv3-95-vIr"/>
@@ -113,14 +171,14 @@
                             <tableViewSection headerTitle="IS YOUR NEW TASK URGENT❓" id="zWq-SN-3GR">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="kzy-Lc-1hD" userLabel="UrgencyCell">
-                                        <rect key="frame" x="0.0" y="155.5" width="414" height="43.5"/>
+                                        <rect key="frame" x="20" y="155.5" width="374" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="kzy-Lc-1hD" id="frz-WZ-EPO">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="374" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="42" translatesAutoresizingMaskIntoConstraints="NO" id="rZ5-BE-hUt">
-                                                    <rect key="frame" x="116" y="6.5" width="182.5" height="31"/>
+                                                    <rect key="frame" x="96" y="6.5" width="182.5" height="31"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lwj-Hp-Db9">
                                                             <rect key="frame" x="0.0" y="0.0" width="22" height="31"/>
@@ -212,7 +270,25 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4sD-9W-yhG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2109" y="188"/>
+            <point key="canvasLocation" x="2126" y="188"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="2sc-jO-GV2">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Azs-l5-7Vx" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="UUp-iJ-pFy">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="56"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="TB6-dB-XoP" kind="relationship" relationship="rootViewController" id="scm-Jb-FqM"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="egY-9v-YOK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2089.8550724637685" y="-524.33035714285711"/>
         </scene>
     </scenes>
 </document>

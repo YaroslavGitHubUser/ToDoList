@@ -19,35 +19,33 @@ class AllTasksTableViewController: UITableViewController {
         case inProgress = "💬"
         case done = "✅"
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         self.navigationItem.leftBarButtonItem = self.editButtonItem
         
-//        print(StorageManager.shared.fetchTasks())
-//        urgentTasks = StorageManager.shared.fetchTasks()[0]
-//        tasksInProgress = StorageManager.shared.fetchTasks()[1]
-//        doneTasks = StorageManager.shared.fetchTasks()[2]
+        //        print(StorageManager.shared.fetchTasks())
+        //        urgentTasks = StorageManager.shared.fetchTasks()[0]
+        //        tasksInProgress = StorageManager.shared.fetchTasks()[1]
+        //        doneTasks = StorageManager.shared.fetchTasks()[2]
         print(StorageManager.shared.fetchTasksFromFile())
         urgentTasks = StorageManager.shared.fetchTasksFromFile()[0]
         tasksInProgress = StorageManager.shared.fetchTasksFromFile()[1]
         doneTasks = StorageManager.shared.fetchTasksFromFile()[2]
     }
-
+    
     // MARK: - Table view data source
-
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         3
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 0 {
-            return "URGENT"
-        } else if section == 1 {
-            return "IN PROGRESS"
-        } else {
-            return "DONE"
+        switch section {
+        case 0: return "URGENT"
+        case 1: return "IN PROGRESS"
+        default: return "DONE"
         }
     }
     
@@ -55,21 +53,19 @@ class AllTasksTableViewController: UITableViewController {
         guard let header = view as? UITableViewHeaderFooterView else { return }
         header.textLabel?.font = UIFont.boldSystemFont(ofSize: 20)
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return urgentTasks.count
-        } else if section == 1 {
-            return tasksInProgress.count
-        } else {
-            return doneTasks.count
+        switch section {
+        case 0: return urgentTasks.count
+        case 1: return tasksInProgress.count
+        default: return doneTasks.count
         }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TaskTableViewCell
-                
+        
         if indexPath.section == 0 {
             cell.taskLabel.text = urgentTasks[indexPath.row].task
             cell.emojiLabel.text = emojis.urgent.rawValue
@@ -80,7 +76,7 @@ class AllTasksTableViewController: UITableViewController {
             cell.taskLabel.text = doneTasks[indexPath.row].task
             cell.emojiLabel.text = emojis.done.rawValue
         }
-                
+        
         return cell
         
     }
@@ -98,9 +94,9 @@ class AllTasksTableViewController: UITableViewController {
         }
         
         tableView.reloadData()
-//        StorageManager.shared.saveTask(with: [urgentTasks, tasksInProgress, doneTasks])
+        //        StorageManager.shared.saveTask(with: [urgentTasks, tasksInProgress, doneTasks])
         StorageManager.shared.saveTaskToFile(with: [urgentTasks, tasksInProgress, doneTasks])
-
+        
     }
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
@@ -117,7 +113,7 @@ class AllTasksTableViewController: UITableViewController {
             }
         }
         tableView.reloadData()
-//        StorageManager.shared.saveTask(with: [urgentTasks, tasksInProgress, doneTasks])
+        //        StorageManager.shared.saveTask(with: [urgentTasks, tasksInProgress, doneTasks])
         StorageManager.shared.saveTaskToFile(with: [urgentTasks, tasksInProgress, doneTasks])
     }
     
@@ -132,21 +128,59 @@ class AllTasksTableViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    @IBAction func unwindSegue(segue: UIStoryboardSegue) {
-        guard segue.identifier == "doneSegue" else { return }
-        guard let newTaskVC = segue.source as? NewTaskTableViewController else { return }
-        if newTaskVC.urgencySwitch.isOn {
-            urgentTasks.append(Task(task: newTaskVC.newTaskTextField.text ?? "N/A", isUrgent: true, isDone: false, inProgress: false))
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard segue.identifier == "editCellView" else { return }
+        let indexPath = tableView.indexPathForSelectedRow!
+        
+        if indexPath.section == 0 {
+            let task = urgentTasks[indexPath.row]
+            let navigationVC = segue.destination as! UINavigationController
+            let editVC = navigationVC.topViewController as! EditViewController
+            editVC.indexPathInfo = indexPath
+            editVC.task = task
+        } else if indexPath.section == 1 {
+            let task = tasksInProgress[indexPath.row]
+            let navigationVC = segue.destination as! UINavigationController
+            let editVC = navigationVC.topViewController as! EditViewController
+            editVC.indexPathInfo = indexPath
+            editVC.task = task
         } else {
-            tasksInProgress.append(Task(task: newTaskVC.newTaskTextField.text ?? "N/A", isUrgent: false, isDone: false, inProgress: true))
+            let task = doneTasks[indexPath.row]
+            let navigationVC = segue.destination as! UINavigationController
+            let editVC = navigationVC.topViewController as! EditViewController
+            editVC.indexPathInfo = indexPath
+            editVC.task = task
+        }
+    }
+    
+    @IBAction func unwindSegue(segue: UIStoryboardSegue) {
+        if segue.identifier == "doneSegue" {
+            guard let newTaskVC = segue.source as? NewTaskTableViewController else { return }
+            if newTaskVC.urgencySwitch.isOn {
+                urgentTasks.append(Task(task: newTaskVC.newTaskTextField.text ?? "N/A", isUrgent: true, isDone: false, inProgress: false))
+            } else {
+                tasksInProgress.append(Task(task: newTaskVC.newTaskTextField.text ?? "N/A", isUrgent: false, isDone: false, inProgress: true))
+            }
+        } else if segue.identifier == "editSegue" {
+            guard let editTaskVC = segue.source as? EditViewController else { return }
+            let sourceTaskName = editTaskVC.editTextField.text
+            if let selectedIndexPath = editTaskVC.indexPathInfo {
+                if selectedIndexPath.section == 0 {
+                    urgentTasks[selectedIndexPath.row].task = sourceTaskName ?? "N/A"
+                } else if selectedIndexPath.section == 1 {
+                    tasksInProgress[selectedIndexPath.row].task = sourceTaskName ?? "N/A"
+                } else {
+                    doneTasks[selectedIndexPath.row].task = sourceTaskName ?? "N/A"
+                }
+            }
         }
         tableView.reloadData()
-//        StorageManager.shared.saveTask(with: [urgentTasks, tasksInProgress, doneTasks])
+        //        StorageManager.shared.saveTask(with: [urgentTasks, tasksInProgress, doneTasks])
         StorageManager.shared.saveTaskToFile(with: [urgentTasks, tasksInProgress, doneTasks])
     }
-        
+    
     // MARK: - Private functions for swipe buttons
-
+    
     private func doneAction(at indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .destructive, title: "Done") { (action, _, completion) in
             
@@ -162,7 +196,7 @@ class AllTasksTableViewController: UITableViewController {
                 self.doneTasks.insert(movedItem, at: 0)
             }
             self.tableView.reloadData()
-//            StorageManager.shared.saveTask(with: [self.urgentTasks, self.tasksInProgress, self.doneTasks])
+            //            StorageManager.shared.saveTask(with: [self.urgentTasks, self.tasksInProgress, self.doneTasks])
             StorageManager.shared.saveTaskToFile(with: [self.urgentTasks, self.tasksInProgress, self.doneTasks])
             completion(true)
         }
@@ -171,8 +205,8 @@ class AllTasksTableViewController: UITableViewController {
         action.image = UIImage(systemName: "checkmark.circle")
         return action
     }
-
-        
+    
+    
     private func urgentAction(at indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .destructive, title: "Urgent") { (action, _, completion) in
             
@@ -187,9 +221,9 @@ class AllTasksTableViewController: UITableViewController {
                 movedItem.isUrgent = true
                 self.urgentTasks.insert(movedItem, at: 0)
             }
-
+            
             self.tableView.reloadData()
-//            StorageManager.shared.saveTask(with: [self.urgentTasks, self.tasksInProgress, self.doneTasks])
+            //            StorageManager.shared.saveTask(with: [self.urgentTasks, self.tasksInProgress, self.doneTasks])
             StorageManager.shared.saveTaskToFile(with: [self.urgentTasks, self.tasksInProgress, self.doneTasks])
             completion(true)
         }
@@ -213,11 +247,11 @@ class AllTasksTableViewController: UITableViewController {
             }
             
             self.tableView.reloadData()
-//            StorageManager.shared.saveTask(with: [self.urgentTasks, self.tasksInProgress, self.doneTasks])
+            //            StorageManager.shared.saveTask(with: [self.urgentTasks, self.tasksInProgress, self.doneTasks])
             StorageManager.shared.saveTaskToFile(with: [self.urgentTasks, self.tasksInProgress, self.doneTasks])
             completion(true)
         }
-
+        
         action.backgroundColor = .systemYellow
         action.image = UIImage(systemName: "ellipses.bubble")
         return action
