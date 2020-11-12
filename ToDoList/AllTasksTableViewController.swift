@@ -132,25 +132,19 @@ class AllTasksTableViewController: UITableViewController {
         guard segue.identifier == "editCellView" else { return }
         let indexPath = tableView.indexPathForSelectedRow!
         
-        if indexPath.section == 0 {
-            let task = urgentTasks[indexPath.row]
-            let navigationVC = segue.destination as! UINavigationController
-            let editVC = navigationVC.topViewController as! EditViewController
-            editVC.indexPathInfo = indexPath
-            editVC.task = task
-        } else if indexPath.section == 1 {
-            let task = tasksInProgress[indexPath.row]
-            let navigationVC = segue.destination as! UINavigationController
-            let editVC = navigationVC.topViewController as! EditViewController
-            editVC.indexPathInfo = indexPath
-            editVC.task = task
-        } else {
-            let task = doneTasks[indexPath.row]
-            let navigationVC = segue.destination as! UINavigationController
-            let editVC = navigationVC.topViewController as! EditViewController
-            editVC.indexPathInfo = indexPath
-            editVC.task = task
+        let task: Task
+        
+        switch indexPath.section {
+        case 0: task = urgentTasks[indexPath.row]
+        case 1: task = tasksInProgress[indexPath.row]
+        default: task = doneTasks[indexPath.row]
         }
+        
+        let navigationVC = segue.destination as! UINavigationController
+        let editVC = navigationVC.topViewController as! EditViewController
+        editVC.indexPathInfo = indexPath
+        editVC.task = task
+
     }
     
     @IBAction func unwindSegue(segue: UIStoryboardSegue) {
@@ -164,6 +158,7 @@ class AllTasksTableViewController: UITableViewController {
         } else if segue.identifier == "editSegue" {
             guard let editTaskVC = segue.source as? EditViewController else { return }
             let sourceTaskName = editTaskVC.editTextField.text
+            
             if let selectedIndexPath = editTaskVC.indexPathInfo {
                 if selectedIndexPath.section == 0 {
                     urgentTasks[selectedIndexPath.row].task = sourceTaskName ?? "N/A"
